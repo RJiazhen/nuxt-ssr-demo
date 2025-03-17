@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-blue-50 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
+    class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
   >
     <div class="p-6">
       <div class="flex items-center justify-between mb-4">
