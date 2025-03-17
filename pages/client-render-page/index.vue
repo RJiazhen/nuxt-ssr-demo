@@ -13,15 +13,16 @@
       v-else-if="error"
       class="text-red-500"
     >
-      Error: {{ error.message }}
+      Error: {{ error?.message || 'An error occurred' }}
     </div>
 
     <div
       v-else
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
     >
+      <div>The request time is {{ requestTime }}</div>
       <div
-        v-for="item in data?.items"
+        v-for="item in data?.items.slice(0, 100)"
         :key="item.id"
         class="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
       >
@@ -35,25 +36,45 @@
     </div>
 
     <div class="mt-4 text-center text-gray-600">
-      Total Items: {{ data?.total }}
+      Total Items: {{ Math.min(data?.total || 0, 100) }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+interface Item {
+  id: number;
+  title: string;
+  description: string;
+  createdAt: string;
+  category: string;
+}
+
+interface ApiResponse {
+  items: Item[];
+  total: number;
+  timestamp: string;
+}
+
 // Use ref to store the data
-const data = ref(null);
+const data = ref<ApiResponse | null>(null);
 const pending = ref(true);
-const error = ref(null);
+const error = ref<Error | null>(null);
+
+const requestTime = ref<string | null>(null);
 
 // Fetch data on client-side only
 onMounted(async () => {
   try {
+    const startTime = performance.now();
     const response = await fetch('/api/items');
     if (!response.ok) throw new Error('Failed to fetch data');
     data.value = await response.json();
+    const endTime = performance.now();
+    requestTime.value = `Request took ${(endTime - startTime).toFixed()}ms`;
   } catch (e) {
-    error.value = e;
+    error.value =
+      e instanceof Error ? e : new Error('An unknown error occurred');
   } finally {
     pending.value = false;
   }

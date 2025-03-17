@@ -21,7 +21,7 @@
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
     >
       <div
-        v-for="item in data?.items"
+        v-for="item in data?.items.slice(0, 100)"
         :key="item.id"
         class="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
       >
@@ -35,11 +35,25 @@
     </div>
 
     <div class="mt-4 text-center text-gray-600">
-      Total Items: {{ data?.total }}
+      Total Items: {{ Math.min(data?.total || 0, 100) }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const { data, pending, error } = await useFetch('/api/items');
+interface Item {
+  id: number;
+  title: string;
+  description: string;
+  createdAt: string;
+  category: string;
+}
+
+interface ApiResponse {
+  items: Item[];
+  total: number;
+  timestamp: string;
+}
+
+const { data, pending, error } = await useFetch<ApiResponse>('/api/items');
 </script>
