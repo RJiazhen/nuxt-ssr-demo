@@ -49,32 +49,60 @@ interface ApiResponse {
   timestamp: string;
 }
 
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  itemCardType: string;
+}
+
 // Use ref to store the data
 const data = ref<ApiResponse | null>(null);
 const pending = ref(true);
 const error = ref<Error | null>(null);
 
+const userData = ref<User | null>(null);
+
 const initialLoadTime = ref<string | null>(null);
 
 // Fetch data on client-side only
-onMounted(async () => {
+onMounted(() => {
+  Promise.all([queryUser(), queryData()]).then(() => {
+    updateInitialLoadTime();
+  });
+});
+
+const queryUser = async () => {
   try {
-    const response = await fetch('/api/items');
-    if (!response.ok) throw new Error('Failed to fetch data');
-    data.value = await response.json();
-    nextTick(() => {
-      const endTime = performance.now();
-      const navigation = performance.getEntriesByType('navigation')[0];
-      const startTime = navigation?.startTime;
-      initialLoadTime.value = `Request took ${(
-        endTime - startTime
-      ).toFixed()}ms`;
-    });
+    const response = await fetch('/api/user');
+    if (!response.ok) throw new Error('Failed to fetch user data');
+    userData.value = await response.json();
   } catch (e) {
     error.value =
       e instanceof Error ? e : new Error('An unknown error occurred');
   } finally {
     pending.value = false;
   }
-});
+};
+
+const queryData = async () => {
+  try {
+    const response = await fetch('/api/items');
+    if (!response.ok) throw new Error('Failed to fetch data');
+    data.value = await response.json();
+  } catch (e) {
+    error.value =
+      e instanceof Error ? e : new Error('An unknown error occurred');
+  } finally {
+    pending.value = false;
+  }
+};
+
+const updateInitialLoadTime = () => {
+  const endTime = performance.now();
+  const navigation = performance.getEntriesByType('navigation')[0];
+  const startTime = navigation?.startTime;
+  initialLoadTime.value = `Request took ${(endTime - startTime).toFixed(2)}ms`;
+};
 </script>

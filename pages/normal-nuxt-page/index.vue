@@ -16,18 +16,34 @@
       Error: {{ error.message }}
     </div>
 
-    <div
-      v-else
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-    >
+    <div v-else>
       <div class="col-span-full text-center mb-4">
         Initial HTML Response Time: {{ initialLoadTime }}
       </div>
-      <ItemCard
-        v-for="item in data?.items.slice(0, 100)"
-        :key="item.id"
-        :item="item"
-      />
+      <div class="col-span-full text-center mb-4">
+        <p>User: {{ userData?.name }}</p>
+        <p>Item Card Type: {{ userData?.itemCardType }}</p>
+      </div>
+      <div
+        v-if="userData?.itemCardType === '1'"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+      >
+        <ItemCard
+          v-for="item in data?.items.slice(0, 100)"
+          :key="item.id"
+          :item="item"
+        />
+      </div>
+      <div
+        v-if="userData?.itemCardType === '2'"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+      >
+        <ItemCard2
+          v-for="item in data?.items.slice(0, 100)"
+          :key="item.id"
+          :item="item"
+        />
+      </div>
     </div>
 
     <div class="mt-4 text-center text-gray-600">
@@ -68,4 +84,9 @@ onMounted(() => {
 });
 
 const { data, pending, error } = await useFetch<ApiResponse>('/api/items');
+const {
+  data: userData,
+  pending: userPending,
+  error: userError,
+} = await useFetch('/api/user');
 </script>
