@@ -20,6 +20,9 @@
       v-else
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
     >
+      <div class="col-span-full text-center mb-4">
+        Initial HTML Response Time: {{ initialLoadTime }}
+      </div>
       <div
         v-for="item in data?.items.slice(0, 100)"
         :key="item.id"
@@ -54,6 +57,22 @@ interface ApiResponse {
   total: number;
   timestamp: string;
 }
+
+const initialLoadTime = ref<string | null>(null);
+
+// Measure the initial HTML load time
+onMounted(() => {
+  const navigation = performance.getEntriesByType(
+    'navigation',
+  )[0] as PerformanceNavigationTiming;
+  if (navigation) {
+    const loadEventEnd = navigation.loadEventEnd;
+    const startTime = navigation.startTime;
+    initialLoadTime.value = `HTML Response took ${(
+      loadEventEnd - startTime
+    ).toFixed(2)}ms`;
+  }
+});
 
 const { data, pending, error } = await useFetch<ApiResponse>('/api/items');
 </script>
