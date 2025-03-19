@@ -3,7 +3,7 @@
     <h1>Hello World</h1>
     <ul>
       <li>
-        <NuxtLink to="/normal-nuxt-page">Normal Nuxt Page</NuxtLink>
+        <NuxtLink to="/all-ssr-page">All SSR Page</NuxtLink>
       </li>
       <li>
         <NuxtLink to="/client-render-page">Client Render Page</NuxtLink>
