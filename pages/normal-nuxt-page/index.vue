@@ -24,6 +24,12 @@
         <UserInfoCard :user="userData?.user" />
       </div>
       <div
+        v-if="!userData?.user?.isPremium"
+        class="col-span-full mb-6"
+      >
+        <MemberDiscountCard :user="userData?.user" />
+      </div>
+      <div
         v-if="userData?.user?.itemCardType === '1'"
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
       >
