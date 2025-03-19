@@ -24,7 +24,13 @@
         <UserInfoCard :user="userData?.user" />
       </div>
       <div
-        v-if="!userData?.user?.isPremium"
+        v-if="userData?.user?.isPremium"
+        class="col-span-full mb-6"
+      >
+        <PremiumMemberCard :user="userData?.user" />
+      </div>
+      <div
+        v-else
         class="col-span-full mb-6"
       >
         <MemberDiscountCard :user="userData?.user" />
