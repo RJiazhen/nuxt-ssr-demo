@@ -20,12 +20,11 @@
       <div class="col-span-full text-center mb-4">
         Initial HTML Response Time: {{ initialLoadTime }}
       </div>
-      <div class="col-span-full text-center mb-4">
-        <p>User: {{ userData?.name }}</p>
-        <p>Item Card Type: {{ userData?.itemCardType }}</p>
+      <div class="col-span-full mb-6">
+        <UserInfoCard :user="userData?.user" />
       </div>
       <div
-        v-if="userData?.itemCardType === '1'"
+        v-if="userData?.user?.itemCardType === '1'"
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
       >
         <ItemCard
@@ -35,7 +34,7 @@
         />
       </div>
       <div
-        v-if="userData?.itemCardType === '2'"
+        v-if="userData?.user?.itemCardType === '2'"
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
       >
         <ItemCard2
@@ -67,6 +66,22 @@ interface ApiResponse {
   timestamp: string;
 }
 
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  itemCardType: string;
+  level: number;
+  isPremium: boolean;
+}
+
+interface UserResponse {
+  user: User;
+  visibleItems: number[];
+  timestamp: string;
+}
+
 const initialLoadTime = ref<string | null>(null);
 
 // Measure the initial HTML load time
@@ -88,5 +103,5 @@ const {
   data: userData,
   pending: userPending,
   error: userError,
-} = await useFetch('/api/user');
+} = await useFetch<UserResponse>('/api/user');
 </script>

@@ -18,14 +18,13 @@
 
     <div v-else>
       <div class="col-span-full text-center mb-4">
-        Initial HTML Response Time: {{ initialLoadTime }}
+        Request Time: {{ requestTime }}
       </div>
-      <div class="col-span-full text-center mb-4">
-        <p>User: {{ userData?.name }}</p>
-        <p>Item Card Type: {{ userData?.itemCardType }}</p>
+      <div class="col-span-full mb-6">
+        <UserInfoCard :user="userData?.user" />
       </div>
       <div
-        v-if="userData?.itemCardType === '1'"
+        v-if="userData?.user?.itemCardType === '1'"
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
       >
         <ItemCard
@@ -35,7 +34,7 @@
         />
       </div>
       <div
-        v-if="userData?.itemCardType === '2'"
+        v-if="userData?.user?.itemCardType === '2'"
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
       >
         <ItemCard2
@@ -73,54 +72,47 @@ interface User {
   email: string;
   role: string;
   itemCardType: string;
+  level: number;
+  isPremium: boolean;
+}
+
+interface UserResponse {
+  user: User;
+  visibleItems: number[];
+  timestamp: string;
 }
 
 // Use ref to store the data
 const data = ref<ApiResponse | null>(null);
 const pending = ref(true);
 const error = ref<Error | null>(null);
-
-const userData = ref<User | null>(null);
-
-const initialLoadTime = ref<string | null>(null);
+const userData = ref<UserResponse | null>(null);
+const requestTime = ref<string | null>(null);
 
 // Fetch data on client-side only
-onMounted(() => {
-  Promise.all([queryUser(), queryData()]).then(() => {
-    updateInitialLoadTime();
-  });
+onMounted(async () => {
+  try {
+    const startTime = performance.now();
+
+    // Fetch both data and user info in parallel
+    const [itemsResponse, userResponse] = await Promise.all([
+      fetch('/api/items'),
+      fetch('/api/user'),
+    ]);
+
+    if (!itemsResponse.ok) throw new Error('Failed to fetch items');
+    if (!userResponse.ok) throw new Error('Failed to fetch user data');
+
+    data.value = await itemsResponse.json();
+    userData.value = await userResponse.json();
+
+    const endTime = performance.now();
+    requestTime.value = `Request took ${(endTime - startTime).toFixed(2)}ms`;
+  } catch (e) {
+    error.value =
+      e instanceof Error ? e : new Error('An unknown error occurred');
+  } finally {
+    pending.value = false;
+  }
 });
-
-const queryUser = async () => {
-  try {
-    const response = await fetch('/api/user');
-    if (!response.ok) throw new Error('Failed to fetch user data');
-    userData.value = await response.json();
-  } catch (e) {
-    error.value =
-      e instanceof Error ? e : new Error('An unknown error occurred');
-  } finally {
-    pending.value = false;
-  }
-};
-
-const queryData = async () => {
-  try {
-    const response = await fetch('/api/items');
-    if (!response.ok) throw new Error('Failed to fetch data');
-    data.value = await response.json();
-  } catch (e) {
-    error.value =
-      e instanceof Error ? e : new Error('An unknown error occurred');
-  } finally {
-    pending.value = false;
-  }
-};
-
-const updateInitialLoadTime = () => {
-  const endTime = performance.now();
-  const navigation = performance.getEntriesByType('navigation')[0];
-  const startTime = navigation?.startTime;
-  initialLoadTime.value = `Request took ${(endTime - startTime).toFixed(2)}ms`;
-};
 </script>
