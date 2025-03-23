@@ -40,6 +40,7 @@
           v-for="item in data?.items.slice(0, 100)"
           :key="item.id"
           :item="item"
+          @show-detail="handleShowDetail"
         />
       </div>
       <div
@@ -50,6 +51,7 @@
           v-for="item in data?.items.slice(0, 100)"
           :key="item.id"
           :item="item"
+          @show-detail="handleShowDetail"
         />
       </div>
     </div>
@@ -57,10 +59,13 @@
     <div class="mt-4 text-center text-gray-600">
       Total Items: {{ Math.min(data?.total || 0, 100) }}
     </div>
+    <ItemDetail ref="itemDetail" />
   </div>
 </template>
 
 <script setup lang="ts">
+import ItemDetail from '~/components/ItemDetail.vue';
+
 interface Item {
   id: number;
   title: string;
@@ -118,4 +123,10 @@ onMounted(async () => {
     pending.value = false;
   }
 });
+
+const itemDetail = ref<InstanceType<typeof ItemDetail>>();
+
+const handleShowDetail = (item: Item) => {
+  itemDetail.value?.open(item);
+};
 </script>

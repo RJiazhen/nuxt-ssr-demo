@@ -1,6 +1,7 @@
 <template>
   <div
-    class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
+    class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer"
+    @click="$emit('showDetail', item)"
   >
     <div class="p-6">
       <div class="flex items-center justify-between mb-4">
@@ -36,5 +37,9 @@ interface Item {
 
 defineProps<{
   item: Item;
+}>();
+
+defineEmits<{
+  showDetail: [item: Item];
 }>();
 </script>

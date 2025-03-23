@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-6">All SSR Page</h1>
+    <h1 class="text-2xl font-bold mb-6">All SSR Page</h1>
 
     <div
       v-if="pending"
@@ -40,6 +40,7 @@
           v-for="item in data?.items.slice(0, 100)"
           :key="item.id"
           :item="item"
+          @show-detail="handleShowDetail"
         />
       </div>
       <div
@@ -50,6 +51,7 @@
           v-for="item in data?.items.slice(0, 100)"
           :key="item.id"
           :item="item"
+          @show-detail="handleShowDetail"
         />
       </div>
     </div>
@@ -57,10 +59,15 @@
     <div class="mt-4 text-center text-gray-600">
       Total Items: {{ Math.min(data?.total || 0, 100) }}
     </div>
+
+    <!-- Item Detail Modal -->
+    <ItemDetail ref="itemDetail" />
   </div>
 </template>
 
 <script setup lang="ts">
+import ItemDetail from '~/components/ItemDetail.vue';
+
 interface Item {
   id: number;
   title: string;
@@ -83,6 +90,9 @@ interface User {
   itemCardType: string;
   level: number;
   isPremium: boolean;
+  premiumStartDate: string;
+  premiumEndDate: string;
+  premiumFeatures: string[];
 }
 
 interface UserResponse {
@@ -97,4 +107,12 @@ const {
   pending: userPending,
   error: userError,
 } = await useFetch<UserResponse>('/api/user');
+
+// Add state for item detail modal
+const itemDetail = ref<InstanceType<typeof ItemDetail>>();
+
+// Handler for showing item detail
+const handleShowDetail = (item: Item) => {
+  itemDetail.value?.open(item);
+};
 </script>

@@ -33,12 +33,9 @@
 
           <div
             v-if="pending"
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+            class="text-center py-8 text-gray-600"
           >
-            <ItemCardSkeleton
-              v-for="n in 6"
-              :key="n"
-            />
+            Loading items...
           </div>
           <div
             v-else-if="error"
@@ -60,18 +57,23 @@
                 "
                 :item="item"
                 :user="userData?.user"
+                @show-detail="handleShowDetail"
               />
             </template>
           </div>
         </div>
       </ClientOnly>
     </div>
+
+    <!-- Item Detail Modal -->
+    <ItemDetail ref="itemDetail" />
   </div>
 </template>
 
 <script setup lang="ts">
 import ItemCard from '~/components/ItemCard.vue';
 import ItemCard2 from '~/components/ItemCard2.vue';
+import ItemDetail from '~/components/ItemDetail.vue';
 
 interface User {
   id: number;
@@ -112,4 +114,12 @@ const {
 } = await useLazyFetch<ApiResponse>('/api/items', {
   default: () => ({ items: [], total: 0, timestamp: '' }),
 });
+
+// Add state for selected item and modal
+const itemDetail = ref<InstanceType<typeof ItemDetail>>();
+
+// Handler for showing item detail
+const handleShowDetail = (item: Item) => {
+  itemDetail.value?.open(item);
+};
 </script>
