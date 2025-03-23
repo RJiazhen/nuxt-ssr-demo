@@ -1,74 +1,20 @@
 <template>
   <div class="container mx-auto p-4">
-    <div class="flex items-center justify-between mb-6">
-      <h1 class="text-3xl font-bold">Client Render Page</h1>
-      <HomeButton />
-    </div>
-
-    <div
-      v-if="pending"
-      class="text-center"
-    >
-      Loading...
-    </div>
-
-    <div
-      v-else-if="error"
-      class="text-red-500"
-    >
-      Error: {{ error?.message || 'An error occurred' }}
-    </div>
-
-    <div v-else>
-      <div class="col-span-full mb-6">
-        <UserInfoCard :user="userData?.user" />
-      </div>
-      <div
-        v-if="userData?.user?.isPremium"
-        class="col-span-full mb-6"
-      >
-        <PremiumMemberCard :user="userData?.user" />
-      </div>
-      <div
-        v-else
-        class="col-span-full mb-6"
-      >
-        <MemberDiscountCard :user="userData?.user" />
-      </div>
-      <div
-        v-if="userData?.user?.itemCardType === '1'"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-      >
-        <ItemCard
-          v-for="item in data?.items.slice(0, 100)"
-          :key="item.id"
-          :item="item"
-          @show-detail="handleShowDetail"
-        />
-      </div>
-      <div
-        v-if="userData?.user?.itemCardType === '2'"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-      >
-        <ItemCard2
-          v-for="item in data?.items.slice(0, 100)"
-          :key="item.id"
-          :item="item"
-          @show-detail="handleShowDetail"
-        />
-      </div>
-    </div>
-
-    <div class="mt-4 text-center text-gray-600">
-      Total Items: {{ Math.min(data?.total || 0, 100) }}
-    </div>
-    <ItemDetail ref="itemDetail" />
+    <PageContent
+      page-title="Client Render Page"
+      :user-data="userData"
+      :items="data?.items?.slice(0, 100)"
+      :pending="pending"
+      :error="error"
+      :total="data?.total"
+      title="Items"
+      :show-total="true"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import ItemDetail from '~/components/ItemDetail.vue';
-import HomeButton from '~/components/HomeButton.vue';
+import PageContent from '~/components/PageContent.vue';
 
 interface Item {
   id: number;
@@ -127,10 +73,4 @@ onMounted(async () => {
     pending.value = false;
   }
 });
-
-const itemDetail = ref<InstanceType<typeof ItemDetail>>();
-
-const handleShowDetail = (item: Item) => {
-  itemDetail.value?.open(item);
-};
 </script>
