@@ -11,7 +11,7 @@
           {{ item.category }}
         </span>
         <span class="text-sm text-gray-500">
-          {{ new Date(item.createdAt).toLocaleDateString() }}
+          {{ item.createdAt }}
         </span>
       </div>
 
