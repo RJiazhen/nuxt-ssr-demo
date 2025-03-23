@@ -2,8 +2,8 @@
  * a api that returns a large list of items after 1 second
  */
 export default defineEventHandler(async (event) => {
-  // Generate a large list of items (100000 items)
-  const items = Array.from({ length: 100000 }, (_, index) => ({
+  // Generate a large list of items (100 items)
+  const items = Array.from({ length: 100 }, (_, index) => ({
     id: index + 1,
     title: `Item ${index + 1}`,
     description: `This is a description for item ${index + 1}`,
