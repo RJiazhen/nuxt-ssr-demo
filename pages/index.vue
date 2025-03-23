@@ -20,4 +20,6 @@
 const router = useRouter();
 const routes = router.getRoutes();
 const filteredRoutes = routes.filter((route) => route.name !== 'index');
+
+prefetchComponents(['/preloaded-ssr']);
 </script>
