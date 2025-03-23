@@ -1,6 +1,6 @@
-# Nuxt Minimal Starter
+# Nuxt SSR Demo
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A demo for nuxt ssr. View the [demo](https://nuxt-ssr-demo.vercel.app/).
 
 ## Setup
 
