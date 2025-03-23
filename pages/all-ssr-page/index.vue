@@ -4,8 +4,10 @@
       page-title="All SSR Page"
       :user-data="userData"
       :items="data?.items?.slice(0, 100)"
-      :pending="pending"
-      :error="error"
+      :pending="itemsStatus === 'pending'"
+      :error="
+        itemsStatus === 'error' ? new Error('Failed to load items') : null
+      "
       :total="data?.total"
       title="Items"
       :show-total="true"
@@ -16,43 +18,6 @@
 <script setup lang="ts">
 import PageContent from '~/components/PageContent.vue';
 
-interface Item {
-  id: number;
-  title: string;
-  description: string;
-  createdAt: string;
-  category: string;
-}
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-  itemCardType: string;
-  level: number;
-  isPremium: boolean;
-  premiumStartDate: string;
-  premiumEndDate: string;
-  premiumFeatures: string[];
-}
-
-interface ApiResponse {
-  items: Item[];
-  total: number;
-  timestamp: string;
-}
-
-interface UserResponse {
-  user: User;
-  visibleItems: number[];
-  timestamp: string;
-}
-
-const { data, pending, error } = await useFetch<ApiResponse>('/api/items');
-const {
-  data: userData,
-  pending: userPending,
-  error: userError,
-} = await useFetch<UserResponse>('/api/user');
+const { data, status: itemsStatus } = await useFetch('/api/items');
+const { data: userData, status: userStatus } = await useFetch('/api/user');
 </script>
