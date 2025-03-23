@@ -19,7 +19,7 @@
       <PremiumMemberCard :user="userData?.user" />
     </div>
     <div
-      v-else
+      v-if="userData && !userData?.user?.isPremium"
       class="col-span-full mb-6"
     >
       <MemberDiscountCard :user="userData?.user" />
