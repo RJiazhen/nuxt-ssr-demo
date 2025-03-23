@@ -4,7 +4,7 @@
       <PageContent
         page-title="Client Render Page"
         :user-data="userData"
-        :items="itemsData?.items?.slice(0, 100)"
+        :items="itemsData?.items"
         :pending="itemsStatus === 'pending'"
         :error="
           itemsStatus === 'error' ? new Error('Failed to fetch items') : null

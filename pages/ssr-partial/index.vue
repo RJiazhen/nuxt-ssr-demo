@@ -3,7 +3,7 @@
     <PageContent
       page-title="SSR Partial Page"
       :user-data="userData"
-      :items="itemsData?.items?.slice(0, 10)"
+      :items="itemsData?.items"
       :pending="status === 'pending'"
       :error="status === 'error' ? new Error('Failed to load items') : null"
       :total="itemsData?.total"
