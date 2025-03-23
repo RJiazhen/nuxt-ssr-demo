@@ -16,10 +16,10 @@
 import PageContent from '~/components/PageContent.vue';
 
 // Server-side data fetching for user
-const { data: userData } = await useFetch('/api/user');
+const { data: userData } = await useLazyFetch('/api/user');
 
 // Client-side data fetching for items
-const { status, data: itemsData } = await useFetch('/api/items', {
+const { status, data: itemsData } = await useLazyFetch('/api/items', {
   default: () => ({ items: [], total: 0, timestamp: '' }),
   server: false,
 });
