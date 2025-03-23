@@ -1,6 +1,9 @@
 <template>
   <div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-6">SSR Partial Page</h1>
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold">SSR Partial Page</h1>
+      <HomeButton />
+    </div>
 
     <!-- Server-rendered section -->
     <div class="grid grid-cols-12 gap-4">
@@ -74,6 +77,7 @@
 import ItemCard from '~/components/ItemCard.vue';
 import ItemCard2 from '~/components/ItemCard2.vue';
 import ItemDetail from '~/components/ItemDetail.vue';
+import HomeButton from '~/components/HomeButton.vue';
 
 interface User {
   id: number;
