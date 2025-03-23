@@ -27,18 +27,18 @@
       <!-- Items section - Client rendered -->
       <ClientOnly>
         <div class="col-span-full">
-          <div class="flex justify-between items-center mb-4">
+          <div class="mb-4">
             <h2 class="text-xl font-bold">Items (Client Rendered)</h2>
-            <div class="text-sm text-gray-500">
-              Request time: {{ requestTime }}ms
-            </div>
           </div>
 
           <div
             v-if="pending"
-            class="text-center py-8"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
           >
-            Loading items...
+            <ItemCardSkeleton
+              v-for="n in 6"
+              :key="n"
+            />
           </div>
           <div
             v-else-if="error"
@@ -111,15 +111,5 @@ const {
   refresh,
 } = await useLazyFetch<ApiResponse>('/api/items', {
   default: () => ({ items: [], total: 0, timestamp: '' }),
-});
-
-console.log(itemsData.value);
-
-// Track request time
-const requestTime = ref(0);
-const startTime = Date.now();
-
-onMounted(() => {
-  requestTime.value = Date.now() - startTime;
 });
 </script>

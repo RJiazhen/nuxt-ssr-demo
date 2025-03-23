@@ -17,9 +17,6 @@
     </div>
 
     <div v-else>
-      <div class="col-span-full text-center mb-4">
-        Initial HTML Response Time: {{ initialLoadTime }}
-      </div>
       <div class="col-span-full mb-6">
         <UserInfoCard :user="userData?.user" />
       </div>
@@ -93,22 +90,6 @@ interface UserResponse {
   visibleItems: number[];
   timestamp: string;
 }
-
-const initialLoadTime = ref<string | null>(null);
-
-// Measure the initial HTML load time
-onMounted(() => {
-  const navigation = performance.getEntriesByType(
-    'navigation',
-  )[0] as PerformanceNavigationTiming;
-  if (navigation) {
-    const loadEventEnd = navigation.loadEventEnd;
-    const startTime = navigation.startTime;
-    initialLoadTime.value = `HTML Response took ${(
-      loadEventEnd - startTime
-    ).toFixed(2)}ms`;
-  }
-});
 
 const { data, pending, error } = await useFetch<ApiResponse>('/api/items');
 const {

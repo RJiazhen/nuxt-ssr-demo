@@ -17,9 +17,6 @@
     </div>
 
     <div v-else>
-      <div class="col-span-full text-center mb-4">
-        Request Time: {{ requestTime }}
-      </div>
       <div class="col-span-full mb-6">
         <UserInfoCard :user="userData?.user" />
       </div>
@@ -99,13 +96,10 @@ const data = ref<ApiResponse | null>(null);
 const pending = ref(true);
 const error = ref<Error | null>(null);
 const userData = ref<UserResponse | null>(null);
-const requestTime = ref<string | null>(null);
 
 // Fetch data on client-side only
 onMounted(async () => {
   try {
-    const startTime = performance.now();
-
     // Fetch both data and user info in parallel
     const [itemsResponse, userResponse] = await Promise.all([
       fetch('/api/items'),
@@ -117,9 +111,6 @@ onMounted(async () => {
 
     data.value = await itemsResponse.json();
     userData.value = await userResponse.json();
-
-    const endTime = performance.now();
-    requestTime.value = `Request took ${(endTime - startTime).toFixed(2)}ms`;
   } catch (e) {
     error.value =
       e instanceof Error ? e : new Error('An unknown error occurred');
