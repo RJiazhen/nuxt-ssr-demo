@@ -31,16 +31,16 @@
     </div>
 
     <div
-      v-if="pending"
+      v-if="status === 'pending'"
       class="text-center py-8 text-gray-600"
     >
       Loading items...
     </div>
     <div
-      v-else-if="error"
+      v-else-if="status === 'error'"
       class="text-center py-8 text-red-500"
     >
-      Error loading items: {{ error }}
+      Error loading items
     </div>
     <div
       v-else
@@ -101,8 +101,7 @@ defineProps<{
   pageTitle: string;
   userData: { user: User } | null;
   items?: Item[];
-  pending?: boolean;
-  error?: Error | null;
+  status: 'idle' | 'pending' | 'error' | 'success';
   total?: number;
   title: string;
   showTotal?: boolean;

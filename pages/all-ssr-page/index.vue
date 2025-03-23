@@ -4,10 +4,7 @@
       page-title="All SSR Page"
       :user-data="userData"
       :items="data?.items"
-      :pending="itemsStatus === 'pending'"
-      :error="
-        itemsStatus === 'error' ? new Error('Failed to load items') : null
-      "
+      :status="itemsStatus"
       :total="data?.total"
       title="Items"
       :show-total="true"
@@ -19,5 +16,5 @@
 import PageContent from '~/components/PageContent.vue';
 
 const { data, status: itemsStatus } = await useFetch('/api/items');
-const { data: userData, status: userStatus } = await useFetch('/api/user');
+const { data: userData } = await useFetch('/api/user');
 </script>

@@ -5,10 +5,7 @@
         page-title="Client Render Page"
         :user-data="userData"
         :items="itemsData?.items"
-        :pending="itemsStatus === 'pending'"
-        :error="
-          itemsStatus === 'error' ? new Error('Failed to fetch items') : null
-        "
+        :status="itemsStatus"
         :total="itemsData?.total"
         title="Items"
         :show-total="true"
@@ -25,7 +22,7 @@ const { data: itemsData, status: itemsStatus } = await useFetch('/api/items', {
   server: false,
 });
 
-const { data: userData, status: userStatus } = await useFetch('/api/user', {
+const { data: userData } = await useFetch('/api/user', {
   server: false,
 });
 </script>
